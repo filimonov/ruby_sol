@@ -76,7 +76,7 @@ module RubySol
         end
       end
 
-      private
+    #  private
       include RubySol::Pure::WriteIOHelpers
 
       def amf0_serialize obj

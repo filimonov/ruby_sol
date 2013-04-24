@@ -13,6 +13,13 @@ module RubySol
         @class_mapper = class_mapper
       end
 
+      def reset_caches
+        @ref_cache = []
+        @string_cache = []
+        @object_cache = []
+        @trait_cache = []
+      end
+
       # Deserialize the source using AMF0 or AMF3. Source should either
       # be a string or StringIO object. If you pass a StringIO object,
       # it will have its position updated to the end of the deserialized
@@ -29,13 +36,11 @@ module RubySol
           raise AMFError, "no source to deserialize"
         end
 
+        reset_caches()
+
         if @version == 0
-          @ref_cache = []
           return amf0_deserialize
         else
-          @string_cache = []
-          @object_cache = []
-          @trait_cache = []
           return amf3_deserialize
         end
       end
@@ -49,7 +54,7 @@ module RubySol
         end
       end
 
-      private
+   #   private
       include RubySol::Pure::ReadIOHelpers
 
       def amf0_deserialize type=nil
