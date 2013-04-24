@@ -1,4 +1,4 @@
-module RocketAMF
+module RubySol
   module Pure
     module ReadIOHelpers #:nodoc:
       def read_int8 source

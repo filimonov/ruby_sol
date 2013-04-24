@@ -2,6 +2,11 @@
 
 ruby_sol - based on RocketAMF reader/write of Flash Player's .sol files.
 
+== SEE ALSO:
+
+* http://wiki.gnashdev.org/SOL
+* http://www.pyamf.org/tutorials/general/sharedobject.html
+
 == LICENSE:
 
 RocketAMF's licence

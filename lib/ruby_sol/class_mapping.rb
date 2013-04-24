@@ -1,7 +1,7 @@
-require 'rocketamf/values/typed_hash'
-require 'rocketamf/values/messages'
+require 'ruby_sol/values/typed_hash'
+require 'ruby_sol/values/messages'
 
-module RocketAMF
+module RubySol
   # Container for all mapped classes
   class MappingSet
     # Creates a mapping set object and populates the default mappings
@@ -14,15 +14,15 @@ module RocketAMF
     # Adds required mapping configs, calling map for the required base mappings.
     # Designed to allow extenders to take advantage of required default mappings.
     def map_defaults
-      map :as => 'flex.messaging.messages.AbstractMessage', :ruby => 'RocketAMF::Values::AbstractMessage'
-      map :as => 'flex.messaging.messages.RemotingMessage', :ruby => 'RocketAMF::Values::RemotingMessage'
-      map :as => 'flex.messaging.messages.AsyncMessage', :ruby => 'RocketAMF::Values::AsyncMessage'
-      map :as => 'DSA', :ruby => 'RocketAMF::Values::AsyncMessageExt'
-      map :as => 'flex.messaging.messages.CommandMessage', :ruby => 'RocketAMF::Values::CommandMessage'
-      map :as => 'DSC', :ruby => 'RocketAMF::Values::CommandMessageExt'
-      map :as => 'flex.messaging.messages.AcknowledgeMessage', :ruby => 'RocketAMF::Values::AcknowledgeMessage'
-      map :as => 'DSK', :ruby => 'RocketAMF::Values::AcknowledgeMessageExt'
-      map :as => 'flex.messaging.messages.ErrorMessage', :ruby => 'RocketAMF::Values::ErrorMessage'
+      map :as => 'flex.messaging.messages.AbstractMessage', :ruby => 'RubySol::Values::AbstractMessage'
+      map :as => 'flex.messaging.messages.RemotingMessage', :ruby => 'RubySol::Values::RemotingMessage'
+      map :as => 'flex.messaging.messages.AsyncMessage', :ruby => 'RubySol::Values::AsyncMessage'
+      map :as => 'DSA', :ruby => 'RubySol::Values::AsyncMessageExt'
+      map :as => 'flex.messaging.messages.CommandMessage', :ruby => 'RubySol::Values::CommandMessage'
+      map :as => 'DSC', :ruby => 'RubySol::Values::CommandMessageExt'
+      map :as => 'flex.messaging.messages.AcknowledgeMessage', :ruby => 'RubySol::Values::AcknowledgeMessage'
+      map :as => 'DSK', :ruby => 'RubySol::Values::AcknowledgeMessageExt'
+      map :as => 'flex.messaging.messages.ErrorMessage', :ruby => 'RubySol::Values::ErrorMessage'
       self
     end
 
@@ -59,7 +59,7 @@ module RocketAMF
   #
   # Example:
   #
-  #   RocketAMF::ClassMapper.define do |m|
+  #   RubySol::ClassMapper.define do |m|
   #     m.map :as => 'AsClass', :ruby => 'RubyClass'
   #     m.map :as => 'vo.User', :ruby => 'Model::User'
   #   end
@@ -76,7 +76,7 @@ module RocketAMF
   #
   # In some cases, it may be beneficial to replace the default provider of class
   # mapping completely. In this case, simply assign your class mapper class to
-  # <tt>RocketAMF::ClassMapper</tt> after loading RocketAMF. Through the magic of
+  # <tt>RubySol::ClassMapper</tt> after loading RubySol. Through the magic of
   # <tt>const_missing</tt>, <tt>ClassMapper</tt> is only defined after the first
   # access by default, so you get no annoying warning messages. Custom class mappers
   # must implement the following methods on instances: <tt>use_array_collection</tt>,
@@ -89,15 +89,15 @@ module RocketAMF
   # Example:
   #
   #   require 'rubygems'
-  #   require 'rocketamf'
+  #   require 'ruby_sol'
   #   
-  #   RocketAMF::ClassMapper = MyCustomClassMapper
+  #   RubySol::ClassMapper = MyCustomClassMapper
   #   # No warning about already initialized constant ClassMapper
-  #   RocketAMF::ClassMapper # MyCustomClassMapper
+  #   RubySol::ClassMapper # MyCustomClassMapper
   #
   # == C ClassMapper
   #
-  # The C class mapper, <tt>RocketAMF::Ext::FastClassMapping</tt>, has the same
+  # The C class mapper, <tt>RubySol::Ext::FastClassMapping</tt>, has the same
   # public API that <tt>RubyAMF::ClassMapping</tt> does, but has some additional
   # performance optimizations that may interfere with the proper serialization of
   # objects. To reduce the cost of processing public methods for every object,
@@ -112,8 +112,8 @@ module RocketAMF
   # Activating the C Class Mapper:
   #
   #   require 'rubygems'
-  #   require 'rocketamf'
-  #   RocketAMF::ClassMapper = RocketAMF::Ext::FastClassMapping
+  #   require 'ruby_sol'
+  #   RubySol::ClassMapper = RubySol::Ext::FastClassMapping
   class ClassMapping
     class << self
       # Global configuration variable for sending Arrays as ArrayCollections.
@@ -131,7 +131,7 @@ module RocketAMF
       #
       # Example:
       #
-      #   RocketAMF::ClassMapper.define do |m|
+      #   RubySol::ClassMapper.define do |m|
       #     m.map :as => 'AsClass', :ruby => 'RubyClass'
       #   end
       def define &block #:yields: mapping_set
@@ -174,7 +174,7 @@ module RocketAMF
 
     # Instantiates a ruby object using the mapping configuration based on the
     # source ActionScript class name. If there is no mapping defined, it returns
-    # a <tt>RocketAMF::Values::TypedHash</tt> with the serialized class name.
+    # a <tt>RubySol::Values::TypedHash</tt> with the serialized class name.
     def get_ruby_obj as_class_name
       ruby_class_name = @mappings.get_ruby_class_name as_class_name
       if ruby_class_name.nil?

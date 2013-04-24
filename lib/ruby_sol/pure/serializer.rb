@@ -1,6 +1,6 @@
-require 'rocketamf/pure/io_helpers'
+require 'ruby_sol/pure/io_helpers'
 
-module RocketAMF
+module RubySol
   module Pure
     # Pure ruby serializer for AMF0 and AMF3
     class Serializer
@@ -77,7 +77,7 @@ module RocketAMF
       end
 
       private
-      include RocketAMF::Pure::WriteIOHelpers
+      include RubySol::Pure::WriteIOHelpers
 
       def amf0_serialize obj
         if @ref_cache[obj] != nil

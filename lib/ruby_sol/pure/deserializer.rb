@@ -1,6 +1,6 @@
-require 'rocketamf/pure/io_helpers'
+require 'ruby_sol/pure/io_helpers'
 
-module RocketAMF
+module RubySol
   module Pure
     # Pure ruby deserializer for AMF0 and AMF3
     class Deserializer
@@ -50,7 +50,7 @@ module RocketAMF
       end
 
       private
-      include RocketAMF::Pure::ReadIOHelpers
+      include RubySol::Pure::ReadIOHelpers
 
       def amf0_deserialize type=nil
         type = read_int8 @source unless type

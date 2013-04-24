@@ -9,7 +9,7 @@ end
 
 # Add <tt>ArrayCollection</tt> override to arrays
 class Array
-  # Override <tt>RocketAMF::ClassMapper.use_array_collection</tt> setting for
+  # Override <tt>RubySol::ClassMapper.use_array_collection</tt> setting for
   # this array. Adds <tt>is_array_collection?</tt> method, which is used by the
   # serializer over the global config if defined.
   def is_array_collection= a

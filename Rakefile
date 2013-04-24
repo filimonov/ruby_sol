@@ -9,7 +9,7 @@ desc 'Default: run the specs.'
 task :default => :spec
 
 # I don't want to depend on bundler, so we do it the bundler way without it
-gemspec_path = 'RocketAMF.gemspec'
+gemspec_path = 'RubySol.gemspec'
 spec = begin
   eval(File.read(File.join(File.dirname(__FILE__), gemspec_path)), TOPLEVEL_BINDING, gemspec_path)
 rescue LoadError => e
@@ -36,21 +36,6 @@ end
 Rake::GemPackageTask.new(spec) do |pkg|
   pkg.need_zip = false
   pkg.need_tar = false
-end
-
-Rake::ExtensionTask.new('rocketamf_ext', spec) do |ext|
-  if RUBY_PLATFORM =~ /mswin|mingw/ then
-    # No cross-compile on win, so compile extension to lib/1.[89]
-    RUBY_VERSION =~ /(\d+\.\d+)/
-    ext.lib_dir = "lib/#{$1}"
-  else
-    ext.cross_compile = true
-    ext.cross_platform = 'x86-mingw32'
-    ext.cross_compiling do |gem_spec|
-      gem_spec.post_install_message = "You installed the binary version of this gem!"
-    end
-  end
-  #ext.config_options << '--enable-sort-props'
 end
 
 desc "Build gem packages"

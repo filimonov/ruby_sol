@@ -3,8 +3,8 @@ require 'rspec'
 require 'rspec/autorun'
 
 $:.unshift(File.dirname(__FILE__) + '/../lib')
-require 'rocketamf'
-require 'rocketamf/pure/io_helpers' # Just to make sure they get loaded
+require 'ruby_sol'
+require 'ruby_sol/pure/io_helpers' # Just to make sure they get loaded
 
 def request_fixture(binary_path)
   data = File.open(File.dirname(__FILE__) + '/fixtures/request/' + binary_path, "rb").read
@@ -19,7 +19,7 @@ def object_fixture(binary_path)
 end
 
 def create_envelope(binary_path)
-  RocketAMF::Envelope.new.populate_from_stream(StringIO.new(request_fixture(binary_path)))
+  RubySol::Envelope.new.populate_from_stream(StringIO.new(request_fixture(binary_path)))
 end
 
 # Helper classes
@@ -34,8 +34,8 @@ class ClassMappingTest2 < ClassMappingTest
 end
 module ANamespace; class TestRubyClass; end; end
 class ExternalizableTest
-  include RocketAMF::Pure::ReadIOHelpers
-  include RocketAMF::Pure::WriteIOHelpers
+  include RubySol::Pure::ReadIOHelpers
+  include RubySol::Pure::WriteIOHelpers
 
   attr_accessor :one, :two
 

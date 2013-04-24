@@ -1,15 +1,15 @@
-require 'rocketamf/pure/io_helpers'
+require 'ruby_sol/pure/io_helpers'
 
-module RocketAMF
+module RubySol
   module Pure
-    # Included into RocketAMF::Envelope, this module replaces the
+    # Included into RubySol::Envelope, this module replaces the
     # populate_from_stream and serialize methods with actual working versions
     module Envelope
-      # Included into RocketAMF::Envelope, this method handles deserializing an
+      # Included into RubySol::Envelope, this method handles deserializing an
       # AMF request/response into the envelope
       def populate_from_stream stream, class_mapper=nil
         stream = StringIO.new(stream) unless StringIO === stream
-        des = Deserializer.new(class_mapper || RocketAMF::ClassMapper.new)
+        des = Deserializer.new(class_mapper || RubySol::ClassMapper.new)
         des.source = stream
 
         # Initialize
@@ -31,7 +31,7 @@ module RocketAMF
           length = read_word32_network stream
           data = des.deserialize(0, nil)
 
-          @headers[name] = RocketAMF::Header.new(name, must_understand, data)
+          @headers[name] = RubySol::Header.new(name, must_understand, data)
         end
 
         # Read in messages
@@ -45,20 +45,20 @@ module RocketAMF
 
           length = read_word32_network stream
           data = des.deserialize(0, nil)
-          if data.is_a?(Array) && data.length == 1 && data[0].is_a?(::RocketAMF::Values::AbstractMessage)
+          if data.is_a?(Array) && data.length == 1 && data[0].is_a?(::RubySol::Values::AbstractMessage)
             data = data[0]
           end
 
-          @messages << RocketAMF::Message.new(target_uri, response_uri, data)
+          @messages << RubySol::Message.new(target_uri, response_uri, data)
         end
 
         self
       end
 
-      # Included into RocketAMF::Envelope, this method handles serializing an
+      # Included into RubySol::Envelope, this method handles serializing an
       # AMF request/response into a string
       def serialize class_mapper=nil
-        ser = Serializer.new(class_mapper || RocketAMF::ClassMapper.new)
+        ser = Serializer.new(class_mapper || RubySol::ClassMapper.new)
         stream = ser.stream
 
         # Write version
@@ -110,8 +110,8 @@ module RocketAMF
       end
 
       private
-      include RocketAMF::Pure::ReadIOHelpers
-      include RocketAMF::Pure::WriteIOHelpers
+      include RubySol::Pure::ReadIOHelpers
+      include RubySol::Pure::WriteIOHelpers
     end
   end
 end

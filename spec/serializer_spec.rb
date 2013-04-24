@@ -7,48 +7,48 @@ require 'rational'
 
 describe "when serializing" do
   before :each do
-    RocketAMF::ClassMapper.reset
+    RubySol::ClassMapper.reset
   end
 
   it "should raise exception with invalid version number" do
     lambda {
-      RocketAMF.serialize("", 5)
+      RubySol.serialize("", 5)
     }.should raise_error("unsupported version 5")
   end
 
   describe "AMF0" do
     it "should serialize nils" do
-      output = RocketAMF.serialize(nil, 0)
+      output = RubySol.serialize(nil, 0)
       output.should == object_fixture('amf0-null.bin')
     end
 
     it "should serialize booleans" do
-      output = RocketAMF.serialize(true, 0)
+      output = RubySol.serialize(true, 0)
       output.should === object_fixture('amf0-boolean.bin')
     end
 
     it "should serialize numbers" do
-      output = RocketAMF.serialize(3.5, 0)
+      output = RubySol.serialize(3.5, 0)
       output.should == object_fixture('amf0-number.bin')
     end
 
     it "should serialize Numeric conformers" do
-      output = RocketAMF.serialize(BigDecimal.new("3.5"), 0)
+      output = RubySol.serialize(BigDecimal.new("3.5"), 0)
       output.should == object_fixture('amf0-number.bin')
     end
 
     it "should serialize strings" do
-      output = RocketAMF.serialize("this is a テスト", 0)
+      output = RubySol.serialize("this is a テスト", 0)
       output.should == object_fixture('amf0-string.bin')
     end
 
     it "should serialize frozen strings" do
-      output = RocketAMF.serialize("this is a テスト".freeze, 0)
+      output = RubySol.serialize("this is a テスト".freeze, 0)
       output.should == object_fixture('amf0-string.bin')
     end
 
     it "should serialize arrays" do
-      output = RocketAMF.serialize(['a', 'b', 'c', 'd'], 0)
+      output = RubySol.serialize(['a', 'b', 'c', 'd'], 0)
       output.should == object_fixture('amf0-strict-array.bin')
     end
 
@@ -57,30 +57,30 @@ describe "when serializing" do
       obj.foo = "baz"
       obj.bar = 3.14
 
-      output = RocketAMF.serialize({'0' => obj, '1' => obj}, 0)
+      output = RubySol.serialize({'0' => obj, '1' => obj}, 0)
       output.should == object_fixture('amf0-ref-test.bin')
     end
 
     it "should serialize Time objects" do
-      output = RocketAMF.serialize(Time.utc(2003, 2, 13, 5), 0)
+      output = RubySol.serialize(Time.utc(2003, 2, 13, 5), 0)
       output.bytesize.should == 11
       output[0,9].should == object_fixture('amf0-time.bin')[0,9] # Ignore TZ
     end
 
     it "should serialize Date objects" do
-      output = RocketAMF.serialize(Date.civil(2020, 5, 30), 0)
+      output = RubySol.serialize(Date.civil(2020, 5, 30), 0)
       output.bytesize.should == 11
       output[0,9].should == object_fixture('amf0-date.bin')[0,9] # Ignore TZ
     end
 
     it "should serialize DateTime objects" do
-      output = RocketAMF.serialize(DateTime.civil(2003, 2, 13, 5), 0)
+      output = RubySol.serialize(DateTime.civil(2003, 2, 13, 5), 0)
       output.bytesize.should == 11
       output[0,9].should == object_fixture('amf0-time.bin')[0,9] # Ignore TZ
     end
 
     it "should serialize hashes as objects" do
-      output = RocketAMF.serialize({:baz => nil, "foo" => "bar"}, 0)
+      output = RubySol.serialize({:baz => nil, "foo" => "bar"}, 0)
       output.should == object_fixture('amf0-untyped-object.bin')
     end
 
@@ -88,16 +88,16 @@ describe "when serializing" do
       obj = RubyClass.new
       obj.foo = "bar"
 
-      output = RocketAMF.serialize(obj, 0)
+      output = RubySol.serialize(obj, 0)
       output.should == object_fixture('amf0-untyped-object.bin')
     end
 
     it "should serialize mapped objects" do
       obj = RubyClass.new
       obj.foo = "bar"
-      RocketAMF::ClassMapper.define {|m| m.map :as => 'org.amf.ASClass', :ruby => 'RubyClass'}
+      RubySol::ClassMapper.define {|m| m.map :as => 'org.amf.ASClass', :ruby => 'RubyClass'}
 
-      output = RocketAMF.serialize(obj, 0)
+      output = RubySol.serialize(obj, 0)
       output.should == object_fixture('amf0-typed-object.bin')
     end
 
@@ -105,7 +105,7 @@ describe "when serializing" do
       it "should support multiple encodings" do
         shift_str = "\x53\x68\x69\x66\x74\x20\x83\x65\x83\x58\x83\x67".force_encoding("Shift_JIS") # "Shift テスト"
         utf_str = "\x55\x54\x46\x20\xe3\x83\x86\xe3\x82\xb9\xe3\x83\x88".force_encoding("UTF-8") # "UTF テスト"
-        output = RocketAMF.serialize({:shift => shift_str, :utf => utf_str, :zed => 5}, 0)
+        output = RubySol.serialize({:shift => shift_str, :utf => utf_str, :zed => 5}, 0)
         output.should == object_fixture("amf0-complex-encoded-string.bin")
       end
     end
@@ -115,109 +115,109 @@ describe "when serializing" do
     describe "simple messages" do
       it "should serialize a null" do
         expected = object_fixture("amf3-null.bin")
-        output = RocketAMF.serialize(nil, 3)
+        output = RubySol.serialize(nil, 3)
         output.should == expected
       end
 
       it "should serialize a false" do
         expected = object_fixture("amf3-false.bin")
-        output = RocketAMF.serialize(false, 3)
+        output = RubySol.serialize(false, 3)
         output.should == expected
       end
 
       it "should serialize a true" do
         expected = object_fixture("amf3-true.bin")
-        output = RocketAMF.serialize(true, 3)
+        output = RubySol.serialize(true, 3)
         output.should == expected
       end
 
       it "should serialize integers" do
         expected = object_fixture("amf3-max.bin")
-        input = RocketAMF::MAX_INTEGER
-        output = RocketAMF.serialize(input, 3)
+        input = RubySol::MAX_INTEGER
+        output = RubySol.serialize(input, 3)
         output.should == expected
 
         expected = object_fixture("amf3-0.bin")
-        output = RocketAMF.serialize(0, 3)
+        output = RubySol.serialize(0, 3)
         output.should == expected
 
         expected = object_fixture("amf3-min.bin")
-        input = RocketAMF::MIN_INTEGER
-        output = RocketAMF.serialize(input, 3)
+        input = RubySol::MIN_INTEGER
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
       it "should serialize large integers" do
         expected = object_fixture("amf3-large-max.bin")
-        input = RocketAMF::MAX_INTEGER + 1
-        output = RocketAMF.serialize(input, 3)
+        input = RubySol::MAX_INTEGER + 1
+        output = RubySol.serialize(input, 3)
         output.should == expected
 
         expected = object_fixture("amf3-large-min.bin")
-        input = RocketAMF::MIN_INTEGER - 1
-        output = RocketAMF.serialize(input, 3)
+        input = RubySol::MIN_INTEGER - 1
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
       it "should serialize floats" do
         expected = object_fixture("amf3-float.bin")
         input = 3.5
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
       it "should serialize BigNums" do
         expected = object_fixture("amf3-bigNum.bin")
         input = 2**1000
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
       it "should serialize float Numeric conformers" do
         expected = object_fixture("amf3-float.bin")
         input = Rational(7, 2) # 3.5
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
       it "should serialize a simple string" do
         expected = object_fixture("amf3-string.bin")
         input = "String . String"
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
       it "should serialize a frozen string" do
         expected = object_fixture("amf3-string.bin")
         input = "String . String".freeze
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
       it "should serialize a symbol as a string" do
         expected = object_fixture("amf3-symbol.bin")
-        output = RocketAMF.serialize(:foo, 3)
+        output = RubySol.serialize(:foo, 3)
         output.should == expected
       end
 
       it "should serialize Time objects" do
         expected = object_fixture("amf3-date.bin")
         input = Time.utc 1970, 1, 1, 0
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
       it "should serialize Date objects" do
         expected = object_fixture("amf3-date.bin")
         input = Date.civil 1970, 1, 1, 0
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
       it "should serialize DateTime objects" do
         expected = object_fixture("amf3-date.bin")
         input = DateTime.civil 1970, 1, 1, 0
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
     end
@@ -243,7 +243,7 @@ describe "when serializing" do
 
         expected = object_fixture("amf3-dynamic-object.bin")
         input = obj
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
@@ -258,7 +258,7 @@ describe "when serializing" do
 
         expected = object_fixture("amf3-externalizable.bin")
         input = obj
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
@@ -269,21 +269,21 @@ describe "when serializing" do
 
         expected = object_fixture("amf3-hash.bin")
         input = hash
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
       it "should serialize an empty array" do
         expected = object_fixture("amf3-empty-array.bin")
         input = []
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
       it "should serialize an array of primatives" do
         expected = object_fixture("amf3-primitive-array.bin")
         input = [1, 2, 3, 4, 5]
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
@@ -298,7 +298,7 @@ describe "when serializing" do
 
         expected = object_fixture("amf3-mixed-array.bin")
         input = [h1, h2, so1, {}, [h1, h2, so1], [], 42, "", [], "", {}, "bar_one", so1]
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
@@ -306,21 +306,21 @@ describe "when serializing" do
         expected = object_fixture('amf3-array-collection.bin')
 
         # Test global
-        RocketAMF::ClassMapper.use_array_collection = true
+        RubySol::ClassMapper.use_array_collection = true
         input = ["foo", "bar"]
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
-        RocketAMF::ClassMapper.use_array_collection = false
+        RubySol::ClassMapper.use_array_collection = false
 
         # Test override
         input = ["foo", "bar"]
         input.is_array_collection = true
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
       it "should serialize a complex set of array collections" do
-        RocketAMF::ClassMapper.define {|m| m.map :as => 'org.amf.ASClass', :ruby => 'RubyClass'}
+        RubySol::ClassMapper.define {|m| m.map :as => 'org.amf.ASClass', :ruby => 'RubyClass'}
         expected = object_fixture('amf3-complex-array-collection.bin')
 
         a = ["foo", "bar"]
@@ -339,7 +339,7 @@ describe "when serializing" do
         b.is_array_collection = true
         input = [a, b, b]
 
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
@@ -348,7 +348,7 @@ describe "when serializing" do
         str = "\000\003これtest\100"
         str.force_encoding("ASCII-8BIT") if str.respond_to?(:force_encoding)
         input = StringIO.new(str)
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
     end
@@ -365,21 +365,21 @@ describe "when serializing" do
 
         expected = object_fixture("amf3-string-ref.bin")
         input = [foo, bar, foo, bar, foo, sc]
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
       it "should not reference the empty string" do
         expected = object_fixture("amf3-empty-string-ref.bin")
         input = ""
-        output = RocketAMF.serialize([input,input], 3)
+        output = RubySol.serialize([input,input], 3)
         output.should == expected
       end
 
       it "should keep references of duplicate dates" do
         expected = object_fixture("amf3-date-ref.bin")
         input = Time.utc 1970, 1, 1, 0
-        output = RocketAMF.serialize([input,input], 3)
+        output = RubySol.serialize([input,input], 3)
         output.should == expected
       end
 
@@ -394,7 +394,7 @@ describe "when serializing" do
 
         expected = object_fixture("amf3-object-ref.bin")
         input = [[obj1, obj2], "bar", [obj1, obj2]]
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
@@ -412,7 +412,7 @@ describe "when serializing" do
         input = [obj1, obj2]
 
         expected = object_fixture("amf3-trait-ref.bin")
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
@@ -422,7 +422,7 @@ describe "when serializing" do
 
         expected = object_fixture("amf3-array-ref.bin")
         input = [a, b, a, b]
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
@@ -434,7 +434,7 @@ describe "when serializing" do
 
         expected = object_fixture("amf3-empty-array-ref.bin")
         input = [a,b,a,b]
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
@@ -443,7 +443,7 @@ describe "when serializing" do
 
         expected = object_fixture("amf3-byte-array-ref.bin")
         input = [b, b]
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
 
@@ -469,7 +469,7 @@ describe "when serializing" do
 
         expected = object_fixture("amf3-graph-member.bin")
         input = parent
-        output = RocketAMF.serialize(input, 3)
+        output = RubySol.serialize(input, 3)
         output.should == expected
       end
     end
@@ -478,7 +478,7 @@ describe "when serializing" do
       it "should support multiple encodings" do
         shift_str = "\x53\x68\x69\x66\x74\x20\x83\x65\x83\x58\x83\x67".force_encoding("Shift_JIS") # "Shift テスト"
         utf_str = "\x55\x54\x46\x20\xe3\x83\x86\xe3\x82\xb9\xe3\x83\x88".force_encoding("UTF-8") # "UTF テスト"
-        output = RocketAMF.serialize([5, shift_str, utf_str, 5], 3)
+        output = RubySol.serialize([5, shift_str, utf_str, 5], 3)
         output.should == object_fixture("amf3-complex-encoded-string-array.bin")
       end
 
@@ -488,14 +488,14 @@ describe "when serializing" do
         utf_str   = "\x74\x68\x69\x73\x20\x69\x73\x20\x61\x20\xe3\x83\x86\xe3\x82\xb9\xe3\x83\x88".force_encoding("UTF-8")
 
         expected = object_fixture("amf3-encoded-string-ref.bin")
-        output = RocketAMF.serialize([shift_str, utf_str], 3)
+        output = RubySol.serialize([shift_str, utf_str], 3)
         output.should == expected
       end
 
       it "should handle inappropriate UTF-8 characters in byte arrays" do
         str = "\xff\xff\xff".force_encoding("ASCII-8BIT")
         str.freeze # For added amusement
-        output = RocketAMF.serialize(StringIO.new(str), 3)
+        output = RubySol.serialize(StringIO.new(str), 3)
         output.should == "\x0c\x07\xff\xff\xff".force_encoding("ASCII-8BIT")
       end
     end
