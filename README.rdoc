@@ -1,27 +1,10 @@
 == DESCRIPTION:
 
-RocketAMF is a full featured AMF0/3 serializer and deserializer with support for
-bi-directional Flash to Ruby class mapping, custom serialization and mapping,
-remoting gateway helpers that follow AMF0/3 messaging specs, and a suite of specs
-to ensure adherence to the specification documents put out by Adobe. If the C
-components compile, then RocketAMF automatically takes advantage of them to
-provide a substantial performance benefit. In addition, RocketAMF is fully
-compatible with Ruby 1.9.
-
-== INSTALL:
-
-  gem install RocketAMF
-
-== SIMPLE EXAMPLE:
-
-  require 'rocketamf'
-
-  hash = {:apple => "Apfel", :red => "Rot", :eyes => "Augen"}
-  File.open("amf.dat", 'w') do |f|
-    f.write RocketAMF.serialize(hash, 3) # Use AMF3 encoding to serialize
-  end
+ruby_sol - based on RocketAMF reader/write of Flash Player's .sol files.
 
 == LICENSE:
+
+RocketAMF's licence
 
 (The MIT License)
 
