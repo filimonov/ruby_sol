@@ -1,5 +1,18 @@
-require 'ruby_sol/values/typed_hash'
-require 'ruby_sol/values/messages'
+#require 'ruby_sol/values/typed_hash'
+#require 'ruby_sol/values/messages'
+module RubySol
+  module Values #:nodoc:
+    # Hash-like object that can store a type string. Used to preserve type information
+    # for unmapped objects after deserialization.
+    class TypedHash < Hash
+      attr_reader :type
+
+      def initialize type
+        @type = type
+      end
+    end
+  end
+end
 
 module RubySol
   # Container for all mapped classes
@@ -14,15 +27,15 @@ module RubySol
     # Adds required mapping configs, calling map for the required base mappings.
     # Designed to allow extenders to take advantage of required default mappings.
     def map_defaults
-      map :as => 'flex.messaging.messages.AbstractMessage', :ruby => 'RubySol::Values::AbstractMessage'
-      map :as => 'flex.messaging.messages.RemotingMessage', :ruby => 'RubySol::Values::RemotingMessage'
-      map :as => 'flex.messaging.messages.AsyncMessage', :ruby => 'RubySol::Values::AsyncMessage'
-      map :as => 'DSA', :ruby => 'RubySol::Values::AsyncMessageExt'
-      map :as => 'flex.messaging.messages.CommandMessage', :ruby => 'RubySol::Values::CommandMessage'
-      map :as => 'DSC', :ruby => 'RubySol::Values::CommandMessageExt'
-      map :as => 'flex.messaging.messages.AcknowledgeMessage', :ruby => 'RubySol::Values::AcknowledgeMessage'
-      map :as => 'DSK', :ruby => 'RubySol::Values::AcknowledgeMessageExt'
-      map :as => 'flex.messaging.messages.ErrorMessage', :ruby => 'RubySol::Values::ErrorMessage'
+#      map :as => 'flex.messaging.messages.AbstractMessage', :ruby => 'RubySol::Values::AbstractMessage'
+#      map :as => 'flex.messaging.messages.RemotingMessage', :ruby => 'RubySol::Values::RemotingMessage'
+#      map :as => 'flex.messaging.messages.AsyncMessage', :ruby => 'RubySol::Values::AsyncMessage'
+#      map :as => 'DSA', :ruby => 'RubySol::Values::AsyncMessageExt'
+#      map :as => 'flex.messaging.messages.CommandMessage', :ruby => 'RubySol::Values::CommandMessage'
+#      map :as => 'DSC', :ruby => 'RubySol::Values::CommandMessageExt'
+#      map :as => 'flex.messaging.messages.AcknowledgeMessage', :ruby => 'RubySol::Values::AcknowledgeMessage'
+#      map :as => 'DSK', :ruby => 'RubySol::Values::AcknowledgeMessageExt'
+#      map :as => 'flex.messaging.messages.ErrorMessage', :ruby => 'RubySol::Values::ErrorMessage'
       self
     end
 
@@ -90,7 +103,7 @@ module RubySol
   #
   #   require 'rubygems'
   #   require 'ruby_sol'
-  #   
+  #
   #   RubySol::ClassMapper = MyCustomClassMapper
   #   # No warning about already initialized constant ClassMapper
   #   RubySol::ClassMapper # MyCustomClassMapper

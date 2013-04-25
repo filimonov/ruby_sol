@@ -13,6 +13,14 @@ module RubySol
         @class_mapper = class_mapper
         @stream = ""
         @depth = 0
+        reset_caches()
+      end
+
+      def reset_caches
+        @ref_cache = SerializerCache.new :object
+        @string_cache = SerializerCache.new :string
+        @object_cache = SerializerCache.new :object
+        @trait_cache = SerializerCache.new :string
       end
 
       # Serialize the given object using AMF0 or AMF3. Can be called from inside
@@ -127,6 +135,14 @@ module RubySol
           @stream << AMF0_STRING_MARKER
           @stream << pack_int16_network(len)
         end
+        @stream << str
+      end
+
+      def amf0_write_string_wo_marker str
+        str = str.encode("UTF-8").force_encoding("ASCII-8BIT") if str.respond_to?(:encode)
+        len = str.bytesize
+        throw SOLError, 'too long string' if len > 2**16-1
+        @stream << pack_int16_network(len)
         @stream << str
       end
 

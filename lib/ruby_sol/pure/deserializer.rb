@@ -11,6 +11,7 @@ module RubySol
       # one to change mappings between deserialization attempts.
       def initialize class_mapper
         @class_mapper = class_mapper
+        reset_caches()
       end
 
       def reset_caches
