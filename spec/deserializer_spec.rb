@@ -168,7 +168,7 @@ describe "when deserializing" do
       end
 
       it "should deserialize BigNums" do
-        input = object_fixture("amf3-bignum.bin")
+        input = object_fixture("amf3-bigNum.bin")
         output = RubySol.deserialize(input, 3)
         output.should == 2**1000
       end

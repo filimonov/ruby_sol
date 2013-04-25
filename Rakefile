@@ -1,9 +1,8 @@
 require 'rubygems'
 require 'rake'
-require 'rake/rdoctask'
-require 'rake/gempackagetask'
+require 'rdoc/task'
+require 'rubygems/package_task'
 require 'rspec/core/rake_task'
-require 'rake/extensiontask'
 
 desc 'Default: run the specs.'
 task :default => :spec
@@ -25,7 +24,7 @@ RSpec::Core::RakeTask.new do |t|
 end
 
 desc 'Generate documentation'
-Rake::RDocTask.new(:rdoc) do |rdoc|
+RDoc::Task.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title    = spec.name
   rdoc.options += spec.rdoc_options
@@ -33,12 +32,12 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include("lib") # Don't include ext folder because no one cares
 end
 
-Rake::GemPackageTask.new(spec) do |pkg|
+Gem::PackageTask.new(spec) do |pkg|
   pkg.need_zip = false
   pkg.need_tar = false
 end
 
 desc "Build gem packages"
 task :gems do
-  sh "rake cross native gem RUBY_CC_VERSION=1.8.7:1.9.2"
+  sh "rake  gem RUBY_CC_VERSION=1.8.7:1.9.2"
 end

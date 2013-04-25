@@ -18,7 +18,6 @@ module RubySol
   Deserializer = RubySol::Pure::Deserializer
   Serializer = RubySol::Pure::Serializer
 
-
   # usage RubySol::read_sol(File.new(filename, 'r:ASCII-8BIT').read)
   def self.read_sol(source)
 
@@ -94,6 +93,16 @@ module RubySol
     else
       super(const)
     end
+  end
+
+  # to have RocketAMF specs compatibility
+  def self.deserialize source, amf_version = 0
+    des = RubySol::Deserializer.new(RubySol::ClassMapper.new)
+    des.deserialize(amf_version, source)
+  end
+  def self.serialize obj, amf_version = 0
+    ser = RubySol::Serializer.new(RubySol::ClassMapper.new)
+    ser.serialize(amf_version, obj)
   end
 
   # The base exception for AMF errors.

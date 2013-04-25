@@ -3,7 +3,14 @@ require 'rspec'
 require 'rspec/autorun'
 
 $:.unshift(File.dirname(__FILE__) + '/../lib')
+require "date"
+require "stringio"
 require 'ruby_sol'
+require 'ruby_sol/extensions'
+require 'ruby_sol/class_mapping'
+require 'ruby_sol/constants'
+require 'ruby_sol/pure/deserializer'
+require 'ruby_sol/pure/serializer'
 require 'ruby_sol/pure/io_helpers' # Just to make sure they get loaded
 
 def request_fixture(binary_path)
@@ -18,10 +25,6 @@ def object_fixture(binary_path)
   data
 end
 
-def create_envelope(binary_path)
-  RubySol::Envelope.new.populate_from_stream(StringIO.new(request_fixture(binary_path)))
-end
-
 # Helper classes
 class RubyClass; attr_accessor :baz, :foo; end;
 class OtherClass; attr_accessor :bar, :foo; end;
@@ -33,6 +36,7 @@ class ClassMappingTest2 < ClassMappingTest
   attr_accessor :prop_c
 end
 module ANamespace; class TestRubyClass; end; end
+
 class ExternalizableTest
   include RubySol::Pure::ReadIOHelpers
   include RubySol::Pure::WriteIOHelpers

@@ -440,7 +440,7 @@ module RubySol
           when AMF3_VECTOR_UINT_MARKER
             0.upto(length - 1) do |i|
               vec << read_word32_network(@source)
-              puts vec[i].to_s(2)
+         #     puts vec[i].to_s(2)
             end
           when AMF3_VECTOR_DOUBLE_MARKER
             0.upto(length - 1) do |i|
@@ -448,7 +448,7 @@ module RubySol
             end
           when AMF3_VECTOR_OBJECT_MARKER
             vector_class = amf3_read_string # Ignore
-            puts vector_class
+        #    puts vector_class
             0.upto(length - 1) do |i|
               vec << amf3_deserialize
             end

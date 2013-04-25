@@ -10,13 +10,13 @@ describe RubySol::ClassMapping do
   end
 
   describe "class name mapping" do
-    it "should allow resetting of mappings back to defaults" do
-      @mapper.get_as_class_name('ClassMappingTest').should_not be_nil
-      RubySol::ClassMapping.reset
-      @mapper = RubySol::ClassMapping.new
-      @mapper.get_as_class_name('ClassMappingTest').should be_nil
-      @mapper.get_as_class_name('RubySol::Values::AcknowledgeMessage').should_not be_nil
-    end
+#    it "should allow resetting of mappings back to defaults" do
+#      @mapper.get_as_class_name('ClassMappingTest').should_not be_nil
+#      RubySol::ClassMapping.reset
+#      @mapper = RubySol::ClassMapping.new
+#      @mapper.get_as_class_name('ClassMappingTest').should be_nil
+#      @mapper.get_as_class_name('RubySol::Values::AcknowledgeMessage').should_not be_nil
+#    end
 
     it "should return AS class name for ruby objects" do
       @mapper.get_as_class_name(ClassMappingTest.new).should == 'ASClass'
@@ -41,28 +41,28 @@ describe RubySol::ClassMapping do
       obj.type.should == 'UnmappedClass'
     end
 
-    it "should map special classes from AS by default" do
-      as_classes = [
-        'flex.messaging.messages.AcknowledgeMessage',
-        'flex.messaging.messages.CommandMessage',
-        'flex.messaging.messages.RemotingMessage'
-      ]
-
-      as_classes.each do |as_class|
-        @mapper.get_ruby_obj(as_class).should_not be_a(RubySol::Values::TypedHash)
-      end
-    end
-
-    it "should map special classes from ruby by default" do
-      ruby_classes = [
-        'RubySol::Values::AcknowledgeMessage',
-        'RubySol::Values::ErrorMessage'
-      ]
-
-      ruby_classes.each do |obj|
-        @mapper.get_as_class_name(obj).should_not be_nil
-      end
-    end
+#    it "should map special classes from AS by default" do
+#      as_classes = [
+#        'flex.messaging.messages.AcknowledgeMessage',
+#        'flex.messaging.messages.CommandMessage',
+#        'flex.messaging.messages.RemotingMessage'
+#      ]
+#
+#      as_classes.each do |as_class|
+#        @mapper.get_ruby_obj(as_class).should_not be_a(RubySol::Values::TypedHash)
+#      end
+#    end
+#
+#    it "should map special classes from ruby by default" do
+#      ruby_classes = [
+#        'RubySol::Values::AcknowledgeMessage',
+#        'RubySol::Values::ErrorMessage'
+#      ]
+#
+#      ruby_classes.each do |obj|
+#        @mapper.get_as_class_name(obj).should_not be_nil
+#      end
+#    end
 
     it "should allow config modification" do
       RubySol::ClassMapping.mappings.map :as => 'SecondClass', :ruby => 'ClassMappingTest'
