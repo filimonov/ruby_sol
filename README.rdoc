@@ -2,6 +2,58 @@
 
 ruby_sol - based on RocketAMF reader/write of Flash Player's .sol files.
 
+== EXAMPLE
+
+    require 'pp'
+    require "stringio"
+    require 'ruby_sol'
+    
+    #
+    # reading sol file
+    #
+    # read_sol adds 2 field automatically
+    # __ruby_sol__amf_version - version of amf inside sol
+    # __ruby_sol__sol_name - name of the sol stored inside file
+    #
+    filename = 'test.sol';
+    content = RubySol::read_sol(File.new(filename).read)
+    pp content
+    
+    
+    #
+    # writing sol file
+    #
+    # data to store should be hash (as sol is key-value storage)
+    # hash keys - should be string, values - any object (that can be encoded via AMF)
+    # hash keys with __ruby_sol__ prefix don't stored, but used
+    # to send some sol-encoding parameters.
+    data = { "__ruby_sol__amf_version" => 3,        # tells RubySol which amf version should be used
+             "__ruby_sol__sol_name"    => "test",   # tells RubySol the name of sol should be written inside
+             "sample_data1"=>  {
+                'a'=>'b',
+                'c' => [1,2,3,4],
+                "float"=>135799632.71333,
+                "datetime"=>DateTime.new(2013,4,26,8,0,0,'+2'),
+                "int" => 1,
+            },
+            'sample_data2' => ['a', 'b', 'c']
+    }
+    f = File.new('test.sol' , 'w')
+    f.write(RubySol::create_sol(data))
+    f.close()
+
+== EXAMPLE2 - dump all FlashPlayer's files content
+
+    require 'pp'
+    require "stringio"
+    require 'ruby_sol'
+    
+    files = Dir.glob(ENV['HOME']+"/.macromedia/Flash_Player/**/*.sol")
+    files.each {|filename|
+         puts filename
+         pp RubySol::read_sol(File.new(filename).read)
+    }
+
 == SEE ALSO:
 
 * http://wiki.gnashdev.org/SOL

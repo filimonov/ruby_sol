@@ -71,7 +71,7 @@ module RubySol
     content.each_key { |key|
       if key !~ /^__ruby_sol__/
         if version == 0
-          ser.amf0_write_string(key)
+          ser.amf0_write_string_wo_marker(key)
           ser.amf0_serialize(content[key])
           ser.stream << SOL_PADDING
         elsif version == 3
