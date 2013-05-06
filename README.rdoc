@@ -2,6 +2,9 @@
 
 ruby_sol - based on RocketAMF reader/write of Flash Player's .sol files.
 
+== INSTALLATION
+    gem install ruby_sol
+
 == EXAMPLE
 
     require 'pp'
